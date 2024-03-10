@@ -25,7 +25,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(SUCESS, Type = typeof(IEnumerable<Pokemon>))]
         public IActionResult GetPokemons()
         {
-            var pokemons = _mapper.Map<PokemonDto>(_repository.GetPokemons());
+            var pokemons = _mapper.Map<List<PokemonDto>>(_repository.GetPokemons());
             
             if(ModelState.IsValid)
             {
@@ -110,6 +110,28 @@ namespace PokemonReviewApp.Controllers
             {
                 return BadRequest(ModelState);
             }   
+        }
+
+        [HttpPost]
+        [ProducesResponseType(201, Type = typeof(Pokemon))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public IActionResult CreatePokemon([FromQuery] int ownerId, [FromQuery] int categoryId ,[FromBody] PokemonDto pokemonToCreate)
+        {
+            if(pokemonToCreate == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var pokemon = _mapper.Map<Pokemon>(pokemonToCreate);
+            
+            if (!_repository.CreatePokemon(pokemon, ownerId, categoryId))
+            {
+                ModelState.AddModelError("", $"Something went wrong saving the pokemon {pokemon.Name}");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Successfully Created.");
         }
 
     }
