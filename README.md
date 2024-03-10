@@ -1,3 +1,3 @@
 # PokemonReviewApp
 
-![alt text](./PokemonReviewApp/Models/18-Figure2-1.png "UML Diagram")
+![alt text](./PokemonReviewApp/Models/UMLDiagram.PNG "UML Diagram")
